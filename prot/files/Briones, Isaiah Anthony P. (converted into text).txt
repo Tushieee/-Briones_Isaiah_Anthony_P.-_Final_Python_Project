@@ -1,0 +1,36 @@
+Briones, Isaiah Anthony P. 							 BSIT – 2101
+
+4.7.2 Packet Tracer – Connect the Physical Layer – Instructions Answer
+
+PART 1
+Which management ports are available?
+AUX and Console ports
+Which LAN and WAN interfaces are available on the East router and how many are there?
+There are 2 WAN interfaces and 2 Gigabit Ethernet interfaces.
+How many physical interfaces are listed?
+4
+What is the default bandwidth of this interface?
+1000000 Kbit
+What is the default bandwidth of this interface?
+1544 Kbit1
+How many expansion slots are available to add additional modules to the East router?
+1
+Click Switch2. How many expansion slots are available?
+5 slots are available
+
+PART 2
+ You need to connect PCs 1, 2, and 3 to the East router, but you do not have the necessary funds to purchase a new switch. Which module can you use to connect the three PCs to the East router?
+HWIC-4ESW module
+How many hosts can you connect to the router using this module?
+4
+Which module can you insert to provide a Gigabit optical connection to Switch3?
+PT-SWITCH-NM-1FGE
+Into which slot was it inserted?
+GigabitEthernet5/1
+
+PART 3
+-------------------------------------------------------
+PART 4
+-------------------------------------------------------
+
+

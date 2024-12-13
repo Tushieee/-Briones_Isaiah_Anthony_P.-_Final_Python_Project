@@ -1,0 +1,173 @@
+
+
+
+
+
+
+QUANTUM DICE ROLLER 
+Database Project Documentation
+
+
+
+
+
+
+
+
+
+By
+JAMES M. CANIABERAL
+
+
+
+
+ARJONEL M. MENDOZA, MIT
+Lecturer
+
+PROJECT OVERVIEW
+The Quantum Dice Roller is a Flask based web app that simulates the Quantum randomness scaled up into an interactive way and a user-friendly experience. The system offers user authentication, roll tracking and real-time statistical analysis to show how one, or how many small factors can accumulate and start affecting or possibly change the following outcomes. With results comparable to commercial quantum simulations, this project, built using Python, Flask and SQlite combines the computational randomness with database management while offering insights on having a scalable design and the science behind proper random number generation.
+ENTITY-RELATIONSHIP DIAGRAM (ERD)
+The ERD outlines the core entities in the Quantum Dice Roller System, including Users, Dice Rolls, and Roll Statistics. Each entity is defined by attributes essential for tracking user activity, managing dice roll results, and storing roll statistics for individual users.
+
+
+
+
+
+
+
+
+
+
+Figure 1. Entity Relationship Diagram
+
+
+
+
+
+
+
+
+
+Figure 2. Entity Relationship Diagram
+
+Entities and their Relationships
+1. Users and Dice Rolls
+Type: One-to-Many (1:N)
+Scientific Basis: Each dice roll is an independent event associated with a unique user. This aligns with the principle of independent random events in probability theory, where prior rolls do not influence future outcomes.
+
+2. Users and Roll Statistics
+Type: One-to-One (1:1)
+Scientific Basis: Statistical summaries provide a snapshot of a user’s historical dice rolls, reflecting broader concepts in data aggregation and analysis, such as mean and extrema calculations.
+
+SQL SCRIPTS
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS dice_rolls (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    roll_result INTEGER NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (username) REFERENCES users (username)
+);
+
+CREATE TABLE IF NOT EXISTS roll_statistics (
+    username TEXT PRIMARY KEY,
+    total_rolls INTEGER DEFAULT 0,
+    highest_roll INTEGER DEFAULT NULL,
+    lowest_roll INTEGER DEFAULT NULL,
+    average_roll REAL DEFAULT NULL,
+    last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (username) REFERENCES users (username) ON DELETE CASCADE
+);
+
+
+Here are the QUERIES used in the accessing of the database:
+
+Insert New User:
+INSERT INTO users (username, password) VALUES (?, ?)
+Check if Username Exists:
+SELECT * FROM users WHERE username = ?
+Insert New Dice Roll:
+INSERT INTO dice_rolls (username, roll_result) VALUES (?, ?)
+Select All Rolls for User:
+SELECT roll_result FROM dice_rolls WHERE username = ?;
+
+Insert or Update Roll Statistics:
+INSERT INTO roll_statistics (
+  	  username, total_rolls, highest_roll, lowest_roll, average_roll, last_updated
+) VALUES (?, ?, ?, ?, ?, ?)
+  ON CONFLICT(username) DO UPDATE SET
+  	  total_rolls = EXCLUDED.total_rolls,
+  	  highest_roll = EXCLUDED.highest_roll,
+               lowest_roll = EXCLUDED.lowest_roll,
+  	  average_roll = EXCLUDED.average_roll,
+               last_updated = CURRENT_TIMESTAMP;
+
+Select Roll Statistics for User:
+SELECT total_rolls, highest_roll, lowest_roll, average_roll, last_updated FROM roll_statistics WHERE username = ?;
+
+Select Roll History (All Rolls with Timestamps):
+SELECT roll_result, timestamp 
+FROM dice_rolls 
+WHERE username = ? 
+ORDER BY timestamp DESC;
+Select Roll History (All Rolls with Timestamps):
+
+-- Complex Query: Users with Average Roll >= 4 and More than 5 Rolls:
+SELECT username, AVG(roll_result) AS average_roll, COUNT(*) AS total_rolls
+FROM dice_rolls
+WHERE roll_result >= 4
+GROUP BY username
+HAVING COUNT(*) > 5;
+
+
+Delete a Specific Roll:
+DELETE FROM dice_rolls WHERE id = ? AND username = ?;
+
+
+
+SAMPLE DATA
+Registered Users Data:
+
+
+
+
+Roll Activity Data:
+
+
+
+Roll Statistics Data:
+
+
+
+Functions used in accessing the Database:
+
+Register/Login.py
+
+
+
+
+Roll/History.py
+
+
+
+
+
+
+
+
+
+Statstics.py
+
+
+
+
+
+
+
+
+Delete roll, Logout.py
